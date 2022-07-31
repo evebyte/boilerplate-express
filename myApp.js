@@ -1,5 +1,8 @@
-// imports express and creates an express app
+// import dotenv and body-parser
 require("dotenv").config();
+const bodyParser = require("body-parser");
+
+// imports express and creates an express app
 let express = require("express");
 let app = express();
 
@@ -14,6 +17,10 @@ app.get("/", (req, res) => {
 	// res.send("Hello Express");
 	res.sendFile(__dirname + "/views/index.html");
 });
+
+// body-parser middleware for parsing request bodies
+app.use(bodyParser.urlencoded({ extended: false }));
+app.use(bodyParser.json());
 
 // we can chain a middleware function and the final handler together
 // adds the current time to the request object
@@ -37,6 +44,28 @@ app.get("/:word/echo", (req, res) => {
 
 	res.json({
 		echo: req.params.word,
+	});
+});
+
+// api endpoint that responds with json document containing the user's name
+// app.route("/name").get((req, res) => {
+// 	// get the name from the request
+// 	const firstName = req.query.first;
+// 	const lastName = req.query.last;
+
+// 	res.json({
+// 		name: `${firstName} ${lastName}`,
+// 	});
+// });
+
+// similar to the above api endpoint, but this time we get the name from the request body using bodyParser
+app.route("/name").post((req, res) => {
+	// get the name from the request
+	const firstName = req.body.first;
+	const lastName = req.body.last;
+
+	res.json({
+		name: `${firstName} ${lastName}`,
 	});
 });
 
